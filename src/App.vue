@@ -12,8 +12,14 @@
             <v-toolbar-title>{{officeName}}</v-toolbar-title>
         </v-toolbar>
         <v-content class="main-content" ref="mainContent">
-            <div>Drive API : {{ gapiSignedIn ? 'connecté' : 'non-connecté' }}</div>
-            <router-view></router-view>
+            <router-view v-if="gapiSignedIn"></router-view>
+            <v-container class="main-container" v-if="!gapiSignedIn">
+
+                <v-layout class="column">
+                    <v-btn @click="onLoginClick()">Se connecter</v-btn>
+                </v-layout>
+
+            </v-container>
         </v-content>
     </v-app>
 </template>
@@ -91,19 +97,15 @@
 
                     // Handle the initial sign-in state.
                     this.updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-                    if (gapi.auth2.getAuthInstance().isSignedIn.get() === false) {
-                        EventBus.$emit('loading', true)
-                        gapi.auth2.getAuthInstance().signIn();
-                    }
                 }, function(error) {
                     alert(JSON.stringify(error, null, 2));
                 });
             },
             updateSigninStatus: function (isSignedIn) {
-                if (isSignedIn) {
-                    EventBus.$emit('loading', false);
-                }
                 this.gapiSignedIn = isSignedIn
+            },
+            onLoginClick: function () {
+                gapi.auth2.getAuthInstance().signIn();
             },
         },
     }

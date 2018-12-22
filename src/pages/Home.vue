@@ -1,5 +1,5 @@
 <template>
-    <v-container class="main-container" ref="mainContainer">
+    <v-container class="main-container" ref="mainContainer" v-show="isLoggedIn()">
 
         <v-layout class="column">
             <v-btn @click="onRepasClick()">Repas</v-btn>
@@ -17,7 +17,10 @@
 </style>
 
 <script>
+    import auth from './mixins/auth'
+
     export default {
+        mixins: [auth],
         data () {
             return {
             }
