@@ -1,5 +1,5 @@
 <template>
-    <v-container class="main-container" ref="mainContainer">
+    <v-container class="main-container" ref="mainContainer" v-show="isLoggedIn()">
         <v-btn @click="onBackClick()" color="orange darken-2" dark>
             <v-icon dark left>arrow_back</v-icon>Retour
         </v-btn>
@@ -82,9 +82,10 @@
 <script>
     import { default as driveService } from '../DriveService'
     import upload from './mixins/upload'
+    import auth from './mixins/auth'
 
     export default {
-        mixins: [upload],
+        mixins: [upload, auth],
         data () {
             return {
                 type: 'Repas',
