@@ -153,26 +153,40 @@ DriveService.prototype = {
         });
     },
     uploadImage: function (filename, file, folder) {
+        console.log(file);
         return new Promise(resolve => {
-            const metadata = {
-                'name': filename,
-                'mimeType': 'image/jpeg',
-                'parents': [folder.id],
-            };
-            const form = new FormData();
-            form.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json'}));
-            form.append('file', file);
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                const base64 = reader.result;
+                const metadata = {
+                    'name': `${filename}.pdf`,
+                    'mimeType': 'application/pdf',
+                    'parents': [folder.id],
+                };
 
-            const accessToken = gapi.auth.getToken().access_token;
-            const xhr = new XMLHttpRequest();
-            xhr.open('post', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id');
-            xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-            xhr.responseType = 'json';
-            xhr.onload = () => {
-                return this.getFileById(xhr.response.id)
-                    .then(image => resolve(image));
+                const doc = new window.PDFDocument();
+                doc.image(base64, undefined, undefined, {width: 450});
+                const stream = doc.pipe(window.blobStream());
+                doc.end();
+                stream.on('finish', () => {
+                    const blob = stream.toBlob('application/pdf');
+                    const form = new FormData();
+                    form.append('metadata', new Blob([JSON.stringify(metadata)], {type: 'application/json'}));
+                    form.append('file', blob);
+
+                    const accessToken = gapi.auth.getToken().access_token;
+                    const xhr = new XMLHttpRequest();
+                    xhr.open('post', 'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id');
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+                    xhr.responseType = 'json';
+                    xhr.onload = () => {
+                        return this.getFileById(xhr.response.id)
+                            .then(image => resolve(image));
+                    };
+                    xhr.send(form);
+                });
             };
-            xhr.send(form);
         });
     },
     append: function (data) {

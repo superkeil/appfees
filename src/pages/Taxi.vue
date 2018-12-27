@@ -23,7 +23,7 @@
                         type="file"
                         style="display: none"
                         ref="image"
-                        accept="image/jpeg,image/jpeg;capture=camera"
+                        accept="image/jpeg;capture=camera"
                         @change="onFilePicked($event)"
                 >
             </v-flex>

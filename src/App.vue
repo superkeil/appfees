@@ -83,8 +83,8 @@
             initClient: function () {
                 const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/spreadsheets';
                 const DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest", "https://sheets.googleapis.com/$discovery/rest?version=v4"];
-                const CLIENT_ID = '...';
-                const API_KEY = '...';
+                const CLIENT_ID = '701703791335-k4hh4f57uq58s32gprfpkgn1jot54qp6.apps.googleusercontent.com';
+                const API_KEY = 'AIzaSyCUm-UzGDvmC_KCjK91ZPBggjcWAoMTgXw';
 
                 gapi.client.init({
                     apiKey: API_KEY,
