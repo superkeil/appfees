@@ -19,6 +19,7 @@ const DriveService = function () {
 DriveService.prototype = {
     rootFolder: null,
     rootFile: null,
+    error: '',
     _ready: function () {
         return new Promise(resolve => {
             Utils.waitFor(() => !!this.rootFile, () => {
@@ -55,7 +56,16 @@ DriveService.prototype = {
         return this.getRootFile('AppFees', this.rootFolder)
             .then(result => {
                 if (!!result) {
-                    this.rootFile = result;
+                    return this.getValueAt('F1', result)
+                        .then(value => {
+                            if (value !== 'TVA 5.5%') {
+                                this.error = 'Insérez manuellement une nouvelle colonne en F du fichier AppFees de votre Google Drive, et intitulez "TVA 5.5%"';
+                                console.log(this.error)
+                                this.rootFile = result;
+                            } else {
+                                this.rootFile = result;
+                            }
+                        });
                 } else {
                     return this.createRootFile('AppFees', this.rootFolder)
                         .then(result => {
@@ -66,11 +76,24 @@ DriveService.prototype = {
                                 ttc: 'TTC',
                                 tva20: 'TVA 20%',
                                 tva10: 'TVA 10%',
+                                tva5_5: 'TVA 5.5%',
                                 client: 'Client',
                                 image: {webViewLink: 'Reçu'},
                             });
                         });
                 }
+            });
+    },
+    getValueAt: function (cell, rootFile) {
+        const request = {
+            spreadsheetId: rootFile.id,
+            range: cell + ':' + cell,
+            majorDimension: 'COLUMNS',
+            valueRenderOption: 'UNFORMATTED_VALUE',
+        };
+        return gapi.client.sheets.spreadsheets.values.get(request)
+            .then(response => {
+                return !!response.result.values && response.result.values.length > 0 && response.result.values[0].length > 0 ? response.result.values[0][0] : null;
             });
     },
     getRootFile: function (name, parentFolder) {
@@ -203,6 +226,7 @@ DriveService.prototype = {
                             data.ttc,
                             data.tva20,
                             data.tva10,
+                            data.tva5_5,
                             data.client,
                             data.image.webViewLink,
                         ]],
@@ -216,7 +240,7 @@ DriveService.prototype = {
             .then(() => {
                 const request = {
                     spreadsheetId: this.rootFile.id,
-                    range: 'F2:F',
+                    range: 'G2:G',
                     majorDimension: 'COLUMNS',
                     valueRenderOption: 'UNFORMATTED_VALUE',
                 };

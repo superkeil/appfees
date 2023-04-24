@@ -76,6 +76,7 @@
                     ttc: Number(this.ttc),
                     tva20: '',
                     tva10: '',
+                    tva5_5: '',
                     client: '',
                 });
             },

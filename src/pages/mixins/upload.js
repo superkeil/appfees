@@ -7,7 +7,11 @@ const upload = {
             this.$router.go(-1)
         },
         calculateTva10: function () {
-            this.tva10 = ((this.ttc - 6*this.tva20) / 11).toFixed(2)
+            //this.tva10 = ((this.ttc - 6*this.tva20) / 11).toFixed(2);
+            this.tva10 = ((this.ttc - (1.2 * this.tva20) / 0.2 - (1.055 * this.tva5_5) / 0.055) / 11).toFixed(2);
+            if (Number(this.tva10) === 0) {
+                this.tva10 = 0;
+            }
         },
         calculateTva20: function () {
             this.tva20 = (this.ttc / 6).toFixed(2)

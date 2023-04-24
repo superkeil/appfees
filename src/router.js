@@ -3,6 +3,7 @@ import Home from './pages/Home'
 import Repas from './pages/Repas'
 import Metro from './pages/Metro'
 import Taxi from './pages/Taxi'
+import Parking from './pages/Parking'
 import Peage from './pages/Peage'
 import Gasoil from './pages/Gasoil'
 
@@ -12,6 +13,7 @@ const routes = [
     { name: 'gasoil', path: '/carburant', component: Gasoil },
     { name: 'peage', path: '/peage', component: Peage },
     { name: 'taxi', path: '/taxi', component: Taxi },
+    { name: 'parking', path: '/parking', component: Parking },
     { name: 'metro', path: '/transports-en-commun', component: Metro },
 ]
 

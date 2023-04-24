@@ -24,6 +24,12 @@
                     @keyup="calculateTva10()"
             ></v-text-field>
             <v-text-field
+                    label="TVA 5.5%"
+                    v-model="tva5_5"
+                    type="text"
+                    @keyup="calculateTva10()"
+            ></v-text-field>
+            <v-text-field
                     label="TVA 10%"
                     v-model="tva10"
                     type="text"
@@ -89,6 +95,7 @@
         data () {
             return {
                 type: 'Repas',
+                tva5_5: null,
                 tva10: null,
                 tva20: null,
                 clients: [],
@@ -127,6 +134,7 @@
                     ttc: Number(this.ttc),
                     tva20: Number(this.tva20),
                     tva10: Number(this.tva10),
+                    tva5_5: Number(this.tva5_5),
                     client: this.clients.join(', '),
                 });
             },
